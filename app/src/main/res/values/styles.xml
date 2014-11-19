@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Basic Colors -->
+        <item name="colorPrimary">@color/theme_default_primary</item>
+        <item name="colorPrimaryDark">@color/theme_default_primary_dark</item>
+        <item name="colorAccent">@color/theme_default_accent</item>
+        <item name="colorControlHighlight">@color/theme_default_accent_light</item>
+
+        <!-- Action Bar -->
+        <item name="windowActionBar">false</item>
+
+
+    </style>
+
+    <style name="AppTheme.DarkToolbar" parent="Theme.AppCompat">
+        <!-- Basic Colors -->
+        <item name="colorPrimary">@color/theme_default_primary</item>
+        <item name="colorPrimaryDark">@color/theme_default_primary_dark</item>
+        <item name="colorAccent">@color/theme_default_accent</item>
+        <item name="colorControlHighlight">@color/theme_default_accent_light</item>
+    </style>
+
+</resources>

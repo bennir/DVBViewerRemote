@@ -1,4 +1,4 @@
-package de.bennir.dvbviewerremote.ui.adapter;
+package de.bennir.dvbviewerremote.ui.nsd;
 
 import android.content.Context;
 import android.graphics.Typeface;

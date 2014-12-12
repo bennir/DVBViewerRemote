@@ -10,7 +10,7 @@ import hugo.weaving.DebugLog;
 import timber.log.Timber;
 
 public class DVBRemoteApp extends Application {
-    private DVBRemoteGraph component;
+    private DVBRemoteComponent component;
 
     @Inject
     ActivityHierarchyServer activityHierarchyServer;
@@ -37,7 +37,7 @@ public class DVBRemoteApp extends Application {
         component.inject(this);
     }
 
-    public DVBRemoteGraph component() {
+    public DVBRemoteComponent component() {
         return component;
     }
 

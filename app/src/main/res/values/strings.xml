@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DVBViewer Remote</string>
+    <string name="app_name">DVB Remote</string>
     <string name="refresh">Refresh</string>
     <string name="skip">Skip</string>
     <string name="select_device">Select Device</string>

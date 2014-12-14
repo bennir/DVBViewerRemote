@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Handler;
+import android.util.Log;
 
+import de.bennir.dvbviewerremote.Config;
 import timber.log.Timber;
 
 public class NsdService {
@@ -35,6 +37,20 @@ public class NsdService {
         Timber.d("NsdManager: " + mNsdManager.toString());
 
         initNsd();
+    }
+
+    public void discoverServices() {
+        try {
+            mNsdManager.discoverServices(
+                    Config.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void stopDiscovery() {
+        mHandler = new Handler();
+        mHandler.post(mStopDiscoveryRunnable);
     }
 
     private void initNsd() {
@@ -93,7 +109,24 @@ public class NsdService {
     }
 
     private void initResolveListener() {
+        mResolveListener = new NsdManager.ResolveListener() {
 
+            @Override
+            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                Timber.e("Resolve failed" + errorCode);
+            }
+
+            @Override
+            public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                Timber.e("Resolve Succeeded. " + serviceInfo);
+
+                if(onNsdChangeListener != null) {
+                    onNsdChangeListener.onServiceResolved(serviceInfo);
+                } else {
+                    Timber.e("no OnNsdChangeListener set");
+                }
+            }
+        };
     }
 
     public void setOnNsdChangeListener(OnNsdChangeListener onNsdChangeListener) {

@@ -24,6 +24,10 @@ public class DVBHost
     public DVBHost() {
     }
 
+    public static DVBHost Local() {
+        return new DVBHost("localhost", "127.0.0.1", "8000");
+    }
+
     public DVBHost(String Name, String Ip, String Port) {
         this.Name = Name;
         this.Ip = Ip;

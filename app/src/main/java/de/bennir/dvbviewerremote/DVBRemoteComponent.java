@@ -3,6 +3,7 @@ package de.bennir.dvbviewerremote;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import de.bennir.dvbviewerremote.ui.ControllerActivity;
 import de.bennir.dvbviewerremote.ui.MainUiModule;
 import de.bennir.dvbviewerremote.ui.NsdActivity;
 
@@ -20,4 +21,5 @@ public interface DVBRemoteComponent {
 
     void inject(DVBRemoteApp app);
     void inject(NsdActivity activity);
+    void inject(ControllerActivity activity);
 }

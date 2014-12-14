@@ -24,6 +24,12 @@
         </activity>
 
 
+        <activity
+            android:name=".ui.ControllerActivity"
+            android:label="Controller" >
+        </activity>
+
+
     </application>
 
 </manifest>

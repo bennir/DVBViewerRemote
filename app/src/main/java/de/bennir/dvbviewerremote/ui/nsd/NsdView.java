@@ -7,10 +7,10 @@ import android.net.nsd.NsdServiceInfo;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ import de.bennir.dvbviewerremote.Config;
 import de.bennir.dvbviewerremote.R;
 import de.bennir.dvbviewerremote.model.DVBHost;
 import de.bennir.dvbviewerremote.ui.ControllerActivity;
-import de.bennir.dvbviewerremote.ui.misc.BetterViewAnimator;
 import timber.log.Timber;
 
 public class NsdView extends LinearLayout {
@@ -45,7 +44,7 @@ public class NsdView extends LinearLayout {
     }
 
     private void updateListView() {
-        if(mAdapter.getCount() == 0) {
+        if (mAdapter.getCount() == 0) {
             Timber.d("Empty");
 
             //TODO: add Loading Header View
@@ -105,6 +104,19 @@ public class NsdView extends LinearLayout {
                         break;
                 }
                 return true;
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NsdServiceInfo nsd = mAdapter.getItem(position);
+                nsdService.stopDiscovery();
+
+                Intent intent = new Intent(context, ControllerActivity.class);
+                DVBHost host = new DVBHost(nsd);
+                intent.putExtra(Config.DVBHOST_KEY, host);
+
+                context.startActivity(intent);
             }
         });
     }

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import de.bennir.dvbviewerremote.DVBRemoteApp;
 import de.bennir.dvbviewerremote.R;
 

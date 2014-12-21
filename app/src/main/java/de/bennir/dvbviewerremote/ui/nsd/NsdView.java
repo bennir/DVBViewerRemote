@@ -6,9 +6,14 @@ import android.content.Intent;
 import android.net.nsd.NsdServiceInfo;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -33,6 +38,8 @@ public class NsdView extends LinearLayout {
 
     private NsdAdapter mAdapter;
     private List<NsdServiceInfo> mItems = new ArrayList<>();
+    private View headerView;
+    private ImageView refresh;
 
     @Inject NsdService nsdService;
 
@@ -44,37 +51,48 @@ public class NsdView extends LinearLayout {
     }
 
     private void updateListView() {
-        if (mAdapter.getCount() == 0) {
-            Timber.d("Empty");
-
-            //TODO: add Loading Header View
-        } else {
-            Timber.d("Not empty");
-            //TODO: remove Loading Header View
-        }
-
         ((Activity) context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (mAdapter.getCount() == 0) {
+                    Timber.d("Empty");
+
+                    listView.addHeaderView(headerView, null, false);
+
+                    Animation rotation = AnimationUtils.loadAnimation(context, R.anim.rotate);
+                    rotation.setRepeatCount(Animation.INFINITE);
+                    refresh.startAnimation(rotation);
+                    mAdapter.setLastPosition(-1);
+                } else {
+                    Timber.d("Not empty");
+                    listView.removeHeaderView(headerView);
+                }
+
                 mAdapter.notifyDataSetChanged();
             }
         });
     }
 
-    @Override protected void onFinishInflate() {
+    @Override
+    protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.inject(this);
 
         mAdapter = new NsdAdapter(context, R.layout.list_item_nsd, mItems);
         listView.setAdapter(mAdapter);
 
+        headerView = LayoutInflater.from(context).inflate(R.layout.list_item_nsd_empty, null);
+        refresh = (ImageView) headerView.findViewById(R.id.anim_refresh);
+
         nsdService.setOnNsdChangeListener(new NsdService.OnNsdChangeListener() {
-            @Override public void onServiceResolved(NsdServiceInfo info) {
+            @Override
+            public void onServiceResolved(NsdServiceInfo info) {
                 mItems.add(info);
                 updateListView();
             }
 
-            @Override public void onServiceLost(NsdServiceInfo info) {
+            @Override
+            public void onServiceLost(NsdServiceInfo info) {
                 for (int i = 0; i < mItems.size(); i++) {
                     if (mItems.get(i).getServiceName().equalsIgnoreCase(info.getServiceName())) {
                         mItems.remove(i);
@@ -84,15 +102,15 @@ public class NsdView extends LinearLayout {
             }
         });
 
+        updateListView();
+
         toolbar.setTitle(getContext().getString(R.string.select_device));
         toolbar.inflateMenu(R.menu.menu_nsd_activity);
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(MenuItem menuItem) {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.menu_refresh:
-                        nsdService.discoverServices();
-                        break;
                     case R.id.menu_forward:
                         nsdService.stopDiscovery();
 
@@ -108,7 +126,8 @@ public class NsdView extends LinearLayout {
         });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 NsdServiceInfo nsd = mAdapter.getItem(position);
                 nsdService.stopDiscovery();
 
@@ -121,15 +140,19 @@ public class NsdView extends LinearLayout {
         });
     }
 
-    @Override protected void onAttachedToWindow() {
+    @Override
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         nsdService.discoverServices();
     }
 
-    @Override protected void onDetachedFromWindow() {
+    @Override
+    protected void onDetachedFromWindow() {
         nsdService.stopDiscovery();
 
         super.onDetachedFromWindow();
     }
+
+
 }

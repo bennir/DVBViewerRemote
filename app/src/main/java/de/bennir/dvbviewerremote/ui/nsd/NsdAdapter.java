@@ -2,10 +2,13 @@ package de.bennir.dvbviewerremote.ui.nsd;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Animatable;
 import android.net.nsd.NsdServiceInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ public class NsdAdapter extends ArrayAdapter<NsdServiceInfo> {
     private List<NsdServiceInfo> items;
     private int itemLayout;
     private Context mContext;
+    private int lastPosition = -1;
 
     public NsdAdapter(Context context, int resource, List<NsdServiceInfo> items) {
         super(context, resource, items);
@@ -24,6 +28,10 @@ public class NsdAdapter extends ArrayAdapter<NsdServiceInfo> {
         this.items = items;
         this.itemLayout = resource;
         this.mContext = context;
+    }
+
+    public void setLastPosition(int position) {
+        lastPosition = position;
     }
 
     @Override
@@ -49,6 +57,12 @@ public class NsdAdapter extends ArrayAdapter<NsdServiceInfo> {
         holder.serviceName.setTypeface(tf);
         holder.serviceName.setText(items.get(position).getServiceName());
         holder.serviceHost.setText(items.get(position).getHost().getHostAddress() + ":" + items.get(position).getPort());
+
+        if(position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom);
+            v.startAnimation(animation);
+            lastPosition = position;
+        }
 
         return v;
     }

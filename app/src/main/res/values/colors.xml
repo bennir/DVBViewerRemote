@@ -13,6 +13,8 @@
     <color name="theme_default_text_hint">#42000000</color>
     <color name="theme_default_text_divider">#1e000000</color>
 
+    <color name="theme_default_grey">#8b8b8b</color>
+
     <color name="theme_background">#e2e2e2</color>
     <color name="transparent">#00000000</color>
     <color name="black">#ff000000</color>
